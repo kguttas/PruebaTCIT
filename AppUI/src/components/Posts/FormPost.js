@@ -58,11 +58,11 @@ const validate = (values) => {
     const errors = {}
 
     if (!values.name) {
-      errors.name = 'Is required'
+        errors.name = 'Es requerido';
     }
   
     if(!values.description) {
-      errors.description = 'Is required'
+        errors.description = 'Es requerido';
     }
 
     return errors
@@ -107,9 +107,9 @@ const FormPost = () => {
 
             showSpinner(spinnerInstance);
 
-            dispatch(postCreate(values));
+            dispatch(postCreate(values)).then((data) => navigate('/'));
 
-            navigate('/');
+            
         }
     });
 

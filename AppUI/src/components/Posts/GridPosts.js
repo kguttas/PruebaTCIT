@@ -30,13 +30,13 @@ const GridPosts = () => {
         deletedPost: state.postsReducers.deletePost
     }));
 
-    if (deletedPost) {
-        dispatch(postCleanState());
+    // if (deletedPost) {
+    //     dispatch(postCleanState());
         
-        dispatch(postsFindAll({ "name": "" }));
+    //     dispatch(postsFindAll({ "name": "" }));
         
-        console.log(deletedPost)
-    }
+    //     console.log(deletedPost)
+    // }
     
     useEffect(() => {
 
@@ -81,7 +81,7 @@ const GridPosts = () => {
         if (bDelete) {
             if (idPost != null) {
                 showSpinner();
-                dispatch(postDelete(idPost));
+                dispatch(postDelete(idPost)).then(data => dispatch(postsFindAll({ "name": "" })) );
                 setIdPost(null);
             }
         }
@@ -94,7 +94,7 @@ const GridPosts = () => {
             <Modal isOpen={bOpenModal} toggle={toggleModal}>
                 <ModalHeader toggle={toggleModal}>Notificación</ModalHeader>
                 <ModalBody>
-                    <p>Desea eliminar el registro de Post?</p>
+                    <p>¿Desea eliminar el registro de Post?</p>
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={() => okDeletePost(true)}>Sí</Button>{' '}
