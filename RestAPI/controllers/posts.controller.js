@@ -4,7 +4,7 @@ const Op = db.Sequelize.Op;
 // Create and Save a new Posts
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.title) {
+  if (!req.body.name) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
@@ -12,7 +12,7 @@ exports.create = (req, res) => {
   }
   // Create a Posts
   const posts = {
-    title: req.body.title,
+    name: req.body.name,
     description: req.body.description,
     published: req.body.published ? req.body.published : false
   };
@@ -30,8 +30,8 @@ exports.create = (req, res) => {
 };
 // Retrieve all Postss from the database.
 exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null;
+  const name = req.query.name;
+  var condition = name ? { name: { [Op.iLike]: `%${name}%` } } : null;
   Posts.findAll({ where: condition })
     .then(data => {
       res.send(data);
@@ -88,25 +88,41 @@ exports.update = (req, res) => {
 // Delete a Posts with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
-  Posts.destroy({
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "Posts was deleted successfully!"
-        });
+
+  Posts.findByPk(id)
+    .then(data => {
+      if (data) {
+        Posts.destroy({
+          where: { id: id }
+        })
+          .then(num => {
+            if (num == 1) {
+              res.send(data);
+            } else {
+              res.send({
+                message: `Cannot delete Posts with id=${id}. Maybe Posts was not found!`
+              });
+            }
+          })
+          .catch(err => {
+            res.status(500).send({
+              message: "Could not delete Posts with id=" + id
+            });
+          });
       } else {
-        res.send({
-          message: `Cannot delete Posts with id=${id}. Maybe Posts was not found!`
+        res.status(404).send({
+          message: `Cannot find Posts with id=${id}.`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Could not delete Posts with id=" + id
+        message: "Error retrieving Posts with id=" + id
       });
     });
+
+
+ 
 };
 // Delete all Postss from the database.
 exports.deleteAll = (req, res) => {
@@ -125,8 +141,8 @@ exports.deleteAll = (req, res) => {
     });
 };
 // Find all published Postss
-exports.findAllPublished = (req, res) => {
-  Posts.findAll({ where: { published: true } })
+exports.findByName = (req, res) => {
+  Posts.findAll({ where: { name: req.book.name } })
     .then(data => {
       res.send(data);
     })

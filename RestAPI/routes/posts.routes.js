@@ -6,7 +6,7 @@ module.exports = app => {
     // Retrieve all Posts
     router.get("/", posts.findAll);
     // Retrieve all published Posts
-    router.get("/published", posts.findAllPublished);
+    router.get("/findByName", posts.findByName);
     // Retrieve a single Postl with id
     router.get("/:id", posts.findOne);
     // Update a Post with id
