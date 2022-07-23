@@ -30,14 +30,6 @@ const GridPosts = () => {
         deletedPost: state.postsReducers.deletePost
     }));
 
-    // if (deletedPost) {
-    //     dispatch(postCleanState());
-        
-    //     dispatch(postsFindAll({ "name": "" }));
-        
-    //     console.log(deletedPost)
-    // }
-    
     useEffect(() => {
 
         createSpinner({
@@ -64,10 +56,10 @@ const GridPosts = () => {
         setSearch(searchName);
     };
 
-    const [idPost, setIdPost] = useState(null);
+    const [post, setPost] = useState(null);
     
-    const deletePost = (id) => {
-        setIdPost(id);
+    const deletePost = (item) => {
+        setPost(item);
         toggleModal();
     }
 
@@ -79,10 +71,10 @@ const GridPosts = () => {
 
     const okDeletePost = (bDelete) => {
         if (bDelete) {
-            if (idPost != null) {
+            if (post != null) {
                 showSpinner();
-                dispatch(postDelete(idPost)).then(data => dispatch(postsFindAll({ "name": "" })) );
-                setIdPost(null);
+                dispatch(postDelete(post.id)).then(data => dispatch(postsFindAll({ "name": "" })) );
+                setPost(null);
             }
         }
 
@@ -94,7 +86,7 @@ const GridPosts = () => {
             <Modal isOpen={bOpenModal} toggle={toggleModal}>
                 <ModalHeader toggle={toggleModal}>Notificación</ModalHeader>
                 <ModalBody>
-                    <p>¿Desea eliminar el registro de Post?</p>
+                    <p>{`¿Desea eliminar el registro de Post "${post?.name}"?`}</p>
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={() => okDeletePost(true)}>Sí</Button>{' '}
@@ -143,7 +135,7 @@ const GridPosts = () => {
                                 <td>{item.description}</td>
                                 <td>
                                     <div className="d-flex justify-content-center">
-                                        <button className="btn btn-outline-danger " type="button" onClick={() => deletePost(item.id)}>
+                                        <button className="btn btn-outline-danger " type="button" onClick={() => deletePost(item)}>
                                             <i className="fa-solid fa-trash-can"></i>
                                         </button>
                                     </div>

@@ -43,48 +43,6 @@ exports.findAll = (req, res) => {
       });
     });
 };
-// Find a single Posts with an id
-exports.findOne = (req, res) => {
-  const id = req.params.id;
-  Posts.findByPk(id)
-    .then(data => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.status(404).send({
-          message: `Cannot find Posts with id=${id}.`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error retrieving Posts with id=" + id
-      });
-    });
-};
-// Update a Posts by the id in the request
-exports.update = (req, res) => {
-  const id = req.params.id;
-  Posts.update(req.body, {
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "Posts was updated successfully."
-        });
-      } else {
-        res.send({
-          message: `Cannot update Posts with id=${id}. Maybe Posts was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating Posts with id=" + id
-      });
-    });
-};
 // Delete a Posts with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
@@ -123,33 +81,4 @@ exports.delete = (req, res) => {
 
 
  
-};
-// Delete all Postss from the database.
-exports.deleteAll = (req, res) => {
-  Posts.destroy({
-    where: {},
-    truncate: false
-  })
-    .then(nums => {
-      res.send({ message: `${nums} Postss were deleted successfully!` });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all postss."
-      });
-    });
-};
-// Find all published Postss
-exports.findByName = (req, res) => {
-  Posts.findAll({ where: { name: req.book.name } })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving postss."
-      });
-    });
 };
